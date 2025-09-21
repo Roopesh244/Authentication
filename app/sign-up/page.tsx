@@ -85,13 +85,15 @@ export default function SignUpPage() {
 
   return (
     <div className="relative z-10 w-[300px] md:w-[350px] bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-xl shadow-2xl text-center transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-      <Image
-  src="/logo.png"
-  alt="User Avatar"
-  width={96}
-  height={96}
-  className="rounded-full mb-4 border-2 border-white/40 shadow-md"
-/>
+      <div className="flex justify-center mb-4">
+        <Image
+    src="/logo.png"
+    alt="User Avatar"
+    width={96}
+    height={96}
+    className="rounded-full mb-4 border-2 border-white/40 shadow-md"
+  />
+  </div>
       <h3 className="text-xl font-bold text-white mb-5 tracking-wide">
         Create Account
       </h3>
