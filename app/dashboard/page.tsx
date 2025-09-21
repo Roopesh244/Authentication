@@ -20,7 +20,7 @@ export default function DashboardPage() {
       if (error || !user) {
         router.push('/sign-in');
       } else {
-        setUserEmail(user.email);
+        setUserEmail(user.email ?? null);
       }
       setLoading(false);
     };
