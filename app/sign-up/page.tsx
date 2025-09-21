@@ -2,10 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 
 export default function SignUpPage() {
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   const router = useRouter();
 
   const [username, setUsername] = useState('');
@@ -29,11 +33,14 @@ export default function SignUpPage() {
     }
 
     try {
-      // Sign up in Supabase auth
-      const { data, error: signUpError } = await supabase.auth.signUp(
-        { email, password },
-        { data: { username } }
-      );
+      // Sign up in Supabase Auth
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username },
+        },
+      });
 
       if (signUpError) {
         setError(signUpError.message);
@@ -51,7 +58,6 @@ export default function SignUpPage() {
 
         if (profileError) {
           if (profileError.code === '23505') {
-            // Email already exists
             setError(
               'This email is already linked with another user. Please try signing in.'
             );

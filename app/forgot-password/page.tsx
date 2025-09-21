@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
+import { getBrowserSupabase } from '@/utils/supabase/browser';
 
 export default function ForgotPasswordPage() {
-  const supabase = createClientComponentClient();
-  const router = useRouter();
+  const supabase = getBrowserSupabase();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -15,11 +13,11 @@ export default function ForgotPasswordPage() {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     setMessage(null);
+    setError(null);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/sign-in`, // redirect after password reset
+      redirectTo: `${window.location.origin}/reset-password`, // where user will land after clicking email link
     });
 
     if (error) {
@@ -32,29 +30,23 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="relative z-10 w-[300px] md:w-[350px] bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-xl shadow-2xl text-center mx-auto mt-20">
-      <img
-        src="/logo.png"
-        alt="Logo"
-        className="w-24 h-24 mx-auto rounded-full mb-4 border-2 border-white/40 shadow-md"
-      />
-      <h3 className="text-xl font-bold text-white mb-5 tracking-wide">
-        Forgot Password
-      </h3>
+    <div className="max-w-md mx-auto mt-20 bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-lg text-center">
+      <h2 className="text-2xl font-bold text-white mb-6">Forgot Password</h2>
 
-      <form className="flex flex-col gap-3" onSubmit={handleForgotPassword}>
+      <form onSubmit={handleForgotPassword} className="flex flex-col gap-4">
         <input
           type="email"
           placeholder="Enter your email"
+          className="px-3 py-2 rounded-md bg-white/20 border border-white/30 text-white placeholder-gray-300"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3 py-2 bg-white/20 border border-white/30 rounded-md text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400 transition duration-200 hover:bg-white/30"
           required
         />
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-purple-600/90 text-white py-2 rounded-md font-medium hover:bg-purple-700 transition duration-200 shadow-md hover:shadow-lg"
+          className="bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-md"
         >
           {loading ? 'Sending...' : 'Send Reset Link'}
         </button>
@@ -63,12 +55,9 @@ export default function ForgotPasswordPage() {
       {message && <p className="mt-3 text-green-400 text-sm">{message}</p>}
       {error && <p className="mt-3 text-red-400 text-sm">{error}</p>}
 
-      <p className="mt-3 text-xs text-gray-300">
+      <p className="mt-4 text-sm text-gray-300">
         Remembered your password?{' '}
-        <a
-          href="/sign-in"
-          className="text-purple-300 font-semibold hover:text-purple-400 transition"
-        >
+        <a href="/sign-in" className="text-purple-300 hover:underline">
           Sign In
         </a>
       </p>

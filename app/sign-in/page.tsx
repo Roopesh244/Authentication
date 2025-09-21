@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { supabase } from '@/lib/supabaseClient'; // new import
 
 export default function SignInPage() {
-  const supabase = createClientComponentClient();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +16,10 @@ export default function SignInPage() {
     setLoading(true);
     setError(null);
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       setError('Invalid credentials. Redirecting to Sign Up...');
@@ -25,6 +27,7 @@ export default function SignInPage() {
     } else if (data?.user) {
       router.push('/dashboard');
     }
+
     setLoading(false);
   };
 
