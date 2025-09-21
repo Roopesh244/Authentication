@@ -3,14 +3,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
+import Image from 'next/image';
 
 export default function SignUpPage() {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
-
-  const router = useRouter();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -76,20 +75,23 @@ export default function SignUpPage() {
         setConfirm('');
         setUsername('');
       }
-    } catch (err: any) {
-      setError(err.message);
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) setError(err.message);
+}
+
 
     setLoading(false);
   };
 
   return (
     <div className="relative z-10 w-[300px] md:w-[350px] bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-xl shadow-2xl text-center transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-      <img
-        src="/logo.png"
-        alt="User Avatar"
-        className="w-24 h-24 mx-auto rounded-full mb-4 border-2 border-white/40 shadow-md transition-transform duration-300 hover:scale-110"
-      />
+      <Image
+  src="/logo.png"
+  alt="User Avatar"
+  width={96}
+  height={96}
+  className="rounded-full mb-4 border-2 border-white/40 shadow-md"
+/>
       <h3 className="text-xl font-bold text-white mb-5 tracking-wide">
         Create Account
       </h3>
